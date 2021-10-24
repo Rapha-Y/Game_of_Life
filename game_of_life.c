@@ -82,24 +82,30 @@ int getNeighbors(int **grid, int i, int j) {
     return neighbor_num;
 }
 
+void fill_newgrid(int **grid, int **newgrid) {
+    for (int i = 0; i < MAX_SIZE; i++) {
+        for (int j = 0; j < MAX_SIZE; j++) {
+            int neighbor_num = getNeighbors(grid, i, j);
+
+            if (grid[i][j] == LIVING && (neighbor_num < 2 || neighbor_num > 3)) {
+                newgrid[i][j] == DEAD;
+            } else if (grid[i][j] == DEAD && neighbor_num == 3) {
+                newgrid[i][j] = LIVING;
+            } else {
+                newgrid[i][j] = grid[i][j];
+            }
+        }
+    }
+}
+
 void show_grid(int **mat) {
     for (int i = 0; i < MAX_SIZE; i++) {
         for (int j = 0; j < MAX_SIZE; j++) {
             if (mat[i][j] == DEAD) {
-                printf("%c", 32);
+                printf("%c", 176);
             } else {
                 printf("%c", 219);
             }
-        }
-        printf("\n");
-    }
-}
-
-void show_count(int **mat) {
-    for (int i = 0; i < MAX_SIZE; i++) {
-        for (int j = 0; j < MAX_SIZE; j++) {
-            int neighbor_num = getNeighbors(mat, i, j);
-            printf("%d", neighbor_num);
         }
         printf("\n");
     }
@@ -111,9 +117,18 @@ int main() {
         grid[i] = (int*) malloc(MAX_SIZE * sizeof(int));
     }
 
+    int **newgrid = (int**) malloc(MAX_SIZE * sizeof(int*));
+    for (int i = 0; i < MAX_SIZE; i++) {
+        newgrid[i] = (int*) malloc(MAX_SIZE * sizeof(int));
+    }
+
     init_grid(grid);
     show_grid(grid);
-    show_count(grid);
+
+    printf("\n");
+
+    fill_newgrid(grid, newgrid);
+    show_grid(newgrid);
 
     return 0;
 }
