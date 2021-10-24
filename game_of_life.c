@@ -106,6 +106,18 @@ void copy_newgrid(int **grid, int **newgrid) {
     }
 }
 
+int count_living(int **grid) {
+    int living_num = 0;
+    for (int i = 0; i < MAX_SIZE; i++) {
+        for (int j = 0; j < MAX_SIZE; j++) {
+            if (grid[i][j] == LIVING) {
+                living_num++;
+            }
+        }
+    }
+    return living_num;
+}
+
 void show_grid(int **mat) {
     for (int i = 0; i < MAX_SIZE; i++) {
         for (int j = 0; j < MAX_SIZE; j++) {
@@ -131,17 +143,17 @@ int main() {
     }
 
     init_grid(grid);
-    show_grid(grid);
+    //show_grid(grid);
+    //printf("\n");
 
-    printf("\n");
+    printf("Condicao inicial: %d\n", count_living(grid));
 
     fill_newgrid(grid, newgrid);
-    show_grid(newgrid);
-
-    printf("\n");
-
     copy_newgrid(grid, newgrid);
-    show_grid(grid);
+
+    //show_grid(grid);
+
+    printf("Geracao 1: %d\n", count_living(grid));
 
     return 0;
 }
