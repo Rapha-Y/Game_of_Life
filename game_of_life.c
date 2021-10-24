@@ -98,6 +98,14 @@ void fill_newgrid(int **grid, int **newgrid) {
     }
 }
 
+void copy_newgrid(int **grid, int **newgrid) {
+    for (int i = 0; i < MAX_SIZE; i++) {
+        for (int j = 0; j < MAX_SIZE; j++) {
+            grid[i][j] = newgrid[i][j];
+        }
+    }
+}
+
 void show_grid(int **mat) {
     for (int i = 0; i < MAX_SIZE; i++) {
         for (int j = 0; j < MAX_SIZE; j++) {
@@ -129,6 +137,11 @@ int main() {
 
     fill_newgrid(grid, newgrid);
     show_grid(newgrid);
+
+    printf("\n");
+
+    copy_newgrid(grid, newgrid);
+    show_grid(grid);
 
     return 0;
 }
