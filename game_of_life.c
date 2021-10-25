@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_SIZE 50
-#define GEN_NUM 5
+#define MAX_SIZE 2048
+#define GEN_NUM 2000
 #define LIVING 1
 #define DEAD 0
 
@@ -14,8 +14,8 @@ void init_grid(int **grid) {
     }
 
     //Glider
-    int row = LIVING;
-    int col = LIVING;
+    int row = 1;
+    int col = 1;
     grid[row][col + 1] = LIVING;
     grid[row + 1][col + 2] = LIVING;
     grid[row + 2][col] = LIVING;
@@ -24,7 +24,7 @@ void init_grid(int **grid) {
 
     //R-pentonimo
     row = 10;
-    col = 10;
+    col = 30;
     grid[row][col + 1] = LIVING;
     grid[row][col + 2] = LIVING;
     grid[row + 1][col] = LIVING;
@@ -32,7 +32,7 @@ void init_grid(int **grid) {
     grid[row + 2][col + 1] = LIVING;
 }
 
-int getNeighbors(int **grid, int i, int j) {
+int getNeighbors(int **grid, int i, int j) {  
     int prev_i = i - 1;
     int prev_j = j - 1;
     int next_i = i + 1;
@@ -88,7 +88,7 @@ void fill_newgrid(int **grid, int **newgrid) {
             int neighbor_num = getNeighbors(grid, i, j);
 
             if (grid[i][j] == LIVING && (neighbor_num < 2 || neighbor_num > 3)) {
-                newgrid[i][j] == DEAD;
+                newgrid[i][j] = DEAD;
             } else if (grid[i][j] == DEAD && neighbor_num == 3) {
                 newgrid[i][j] = LIVING;
             } else {
@@ -143,17 +143,13 @@ int main() {
     }
 
     init_grid(grid);
-    //show_grid(grid);
-    //printf("\n");
+    printf("Initial state: %d\n", count_living(grid));
 
-    printf("Condicao inicial: %d\n", count_living(grid));
-
-    fill_newgrid(grid, newgrid);
-    copy_newgrid(grid, newgrid);
-
-    //show_grid(grid);
-
-    printf("Geracao 1: %d\n", count_living(grid));
+    for (int i = 0; i < GEN_NUM; i++) {
+        fill_newgrid(grid, newgrid);
+        copy_newgrid(grid, newgrid);
+        printf("Gen %d: %d\n", i + 1, count_living(grid));
+    }
 
     return 0;
 }
