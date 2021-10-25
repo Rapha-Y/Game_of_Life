@@ -95,7 +95,7 @@ void fill_newgrid(int **grid, int **newgrid) {
 
             if (grid[i][j] == LIVING && (neighbor_num < 2 || neighbor_num > 3)) {
                 newgrid[i][j] = DEAD;
-            } else if (grid[i][j] == DEAD && neighbor_num == 3) {
+            } else if (grid[i][j] == DEAD && (neighbor_num == 3 || neighbor_num == 6)) {
                 newgrid[i][j] = LIVING;
             } else {
                 newgrid[i][j] = grid[i][j];
@@ -159,7 +159,7 @@ int main() {
     }
     
     init_grid(grid);
-    printf("Initial state: %d\n", count_living(grid));   
+    printf("Initial state: %d\n", count_living(grid));
 
     for (int i = 0; i < GEN_NUM; i++) {
         fill_newgrid(grid, newgrid);
