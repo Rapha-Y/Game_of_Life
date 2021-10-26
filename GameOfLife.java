@@ -38,6 +38,14 @@ public class GameOfLife {
         grid[row + 2][col + 1] = this.LIVING;
     }
 
+    private void copy_newgrid() {
+        for (int i = 0; i < this.MAX_SIZE; i++) {
+            for (int j = 0; j < this.MAX_SIZE; j++) {
+                this.grid[i][j] = this.newgrid[i][j];
+            }
+        }
+    }
+
     //for visualization only
     private void show_grid() {
         for (int i = 0; i < this.MAX_SIZE; i++) {
@@ -50,11 +58,14 @@ public class GameOfLife {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public static void main(String[] args) {
         GameOfLife game = new GameOfLife();
         game.fill_grids();
+        game.show_grid();
+        game.copy_newgrid();
         game.show_grid();
     }
 }
