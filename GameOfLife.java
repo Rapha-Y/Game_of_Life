@@ -60,28 +60,28 @@ public class GameOfLife {
 
         //count number of living neighbors
         int neighbor_num = 0;
-        if (grid[prev_i][prev_j] == this.LIVING) {
+        if (this.grid[prev_i][prev_j] == this.LIVING) {
             neighbor_num++;
         }
-        if (grid[prev_i][j] == this.LIVING) {
+        if (this.grid[prev_i][j] == this.LIVING) {
             neighbor_num++;
         }
-        if (grid[prev_i][next_j] == this.LIVING) {
+        if (this.grid[prev_i][next_j] == this.LIVING) {
             neighbor_num++;
         }
-        if (grid[i][prev_j] == this.LIVING) {
+        if (this.grid[i][prev_j] == this.LIVING) {
             neighbor_num++;
         }
-        if (grid[i][next_j] == this.LIVING) {
+        if (this.grid[i][next_j] == this.LIVING) {
             neighbor_num++;
         }
-        if (grid[next_i][prev_j] == this.LIVING) {
+        if (this.grid[next_i][prev_j] == this.LIVING) {
             neighbor_num++;
         }
-        if (grid[next_i][j] == this.LIVING) {
+        if (this.grid[next_i][j] == this.LIVING) {
             neighbor_num++;
         }
-        if (grid[next_i][next_j] == this.LIVING) {
+        if (this.grid[next_i][next_j] == this.LIVING) {
             neighbor_num++;
         }
 
@@ -96,16 +96,30 @@ public class GameOfLife {
         }
     }
 
+    private void fill_newgrid() {
+        for (int i = 0; i < this.MAX_SIZE; i++) {
+            for (int j = 0; j < this.MAX_SIZE; j++) {
+                int neighbor_num = this.getNeighbors(i, j);
+    
+                if (this.grid[i][j] == this.LIVING && (neighbor_num < 2 || neighbor_num > 3)) {
+                    this.newgrid[i][j] = this.DEAD;
+                } else if (this.grid[i][j] == this.DEAD && neighbor_num == 3) {
+                    this.newgrid[i][j] = this.LIVING;
+                } else {
+                    this.newgrid[i][j] = this.grid[i][j];
+                }
+            }
+        }
+    }
+
     //for visualization only
     private void show_grid() {
         for (int i = 0; i < this.MAX_SIZE; i++) {
             for (int j = 0; j < this.MAX_SIZE; j++) {
                 if (this.grid[i][j] == this.DEAD) {
-                    //System.out.print('D');
-                    System.out.print(this.getNeighbors(i, j));
+                    System.out.print('D');
                 } else {
-                    //System.out.print('L');
-                    System.out.print(this.getNeighbors(i, j));
+                    System.out.print('L');
                 }
             }
             System.out.println();
@@ -116,6 +130,9 @@ public class GameOfLife {
     public static void main(String[] args) {
         GameOfLife game = new GameOfLife();
         game.fill_grids();
+        game.show_grid();
+        game.fill_newgrid();
+        game.copy_newgrid();
         game.show_grid();
     }
 }
