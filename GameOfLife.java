@@ -112,6 +112,18 @@ public class GameOfLife {
         }
     }
 
+    private int count_living() {
+        int living_num = 0;
+        for (int i = 0; i < this.MAX_SIZE; i++) {
+            for (int j = 0; j < this.MAX_SIZE; j++) {
+                if (this.grid[i][j] == this.LIVING) {
+                    living_num++;
+                }
+            }
+        }
+        return living_num;
+    }
+
     //for visualization only
     private void show_grid() {
         for (int i = 0; i < this.MAX_SIZE; i++) {
@@ -130,9 +142,11 @@ public class GameOfLife {
     public static void main(String[] args) {
         GameOfLife game = new GameOfLife();
         game.fill_grids();
-        game.show_grid();
+        //game.show_grid();
+        System.out.println("Initial state: " + game.count_living());
         game.fill_newgrid();
         game.copy_newgrid();
-        game.show_grid();
+        //game.show_grid();
+        System.out.println("Gen 1: " + game.count_living());
     }
 }
