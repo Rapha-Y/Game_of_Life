@@ -38,6 +38,56 @@ public class GameOfLife {
         grid[row + 2][col + 1] = this.LIVING;
     }
 
+    private int getNeighbors(int i, int j) {
+        int prev_i = i - 1;
+        int prev_j = j - 1;
+        int next_i = i + 1;
+        int next_j = j + 1;
+
+        //loop through the board's edges
+        if (prev_i < 0) {
+            prev_i = this.MAX_SIZE - 1;
+        }
+        if (prev_j < 0) {
+            prev_j = this.MAX_SIZE - 1;
+        }
+        if (next_i > this.MAX_SIZE - 1) {
+            next_i = 0;
+        }
+        if (next_j > this.MAX_SIZE - 1) {
+            next_j = 0;
+        }
+
+        //count number of living neighbors
+        int neighbor_num = 0;
+        if (grid[prev_i][prev_j] == this.LIVING) {
+            neighbor_num++;
+        }
+        if (grid[prev_i][j] == this.LIVING) {
+            neighbor_num++;
+        }
+        if (grid[prev_i][next_j] == this.LIVING) {
+            neighbor_num++;
+        }
+        if (grid[i][prev_j] == this.LIVING) {
+            neighbor_num++;
+        }
+        if (grid[i][next_j] == this.LIVING) {
+            neighbor_num++;
+        }
+        if (grid[next_i][prev_j] == this.LIVING) {
+            neighbor_num++;
+        }
+        if (grid[next_i][j] == this.LIVING) {
+            neighbor_num++;
+        }
+        if (grid[next_i][next_j] == this.LIVING) {
+            neighbor_num++;
+        }
+
+        return neighbor_num;
+    }
+
     private void copy_newgrid() {
         for (int i = 0; i < this.MAX_SIZE; i++) {
             for (int j = 0; j < this.MAX_SIZE; j++) {
@@ -51,9 +101,11 @@ public class GameOfLife {
         for (int i = 0; i < this.MAX_SIZE; i++) {
             for (int j = 0; j < this.MAX_SIZE; j++) {
                 if (this.grid[i][j] == this.DEAD) {
-                    System.out.print('D');
+                    //System.out.print('D');
+                    System.out.print(this.getNeighbors(i, j));
                 } else {
-                    System.out.print('L');
+                    //System.out.print('L');
+                    System.out.print(this.getNeighbors(i, j));
                 }
             }
             System.out.println();
@@ -64,8 +116,6 @@ public class GameOfLife {
     public static void main(String[] args) {
         GameOfLife game = new GameOfLife();
         game.fill_grids();
-        game.show_grid();
-        game.copy_newgrid();
         game.show_grid();
     }
 }
