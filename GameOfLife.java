@@ -1,6 +1,6 @@
 public class GameOfLife {
-    private static final int MAX_SIZE = 50; //2048;
-    private static final int GEN_NUM = 5; //2000;
+    private static final int MAX_SIZE = 2048;
+    private static final int GEN_NUM = 2000;
     private static final int THREAD_NUM = 1;
     private static final int LIVING = 1;
     private static final int DEAD = 0;
@@ -139,14 +139,19 @@ public class GameOfLife {
         System.out.println();
     }
 
+    private void run() {
+        this.fill_grids();
+        System.out.println("Initial state: " + this.count_living());
+
+        for (int i = 0; i < this.GEN_NUM; i++) {
+            this.fill_newgrid();
+            this.copy_newgrid();
+            System.out.println("Gen " + (i + 1) + ": " + this.count_living());
+        }
+    }
+
     public static void main(String[] args) {
         GameOfLife game = new GameOfLife();
-        game.fill_grids();
-        //game.show_grid();
-        System.out.println("Initial state: " + game.count_living());
-        game.fill_newgrid();
-        game.copy_newgrid();
-        //game.show_grid();
-        System.out.println("Gen 1: " + game.count_living());
+        game.run();
     }
 }
