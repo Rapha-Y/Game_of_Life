@@ -1,12 +1,20 @@
-public class GameOfLife {
-    private static final int MAX_SIZE = 2048;
-    private static final int GEN_NUM = 2000;
-    private static final int THREAD_NUM = 1;
-    private static final int LIVING = 1;
-    private static final int DEAD = 0;
+import java.time.Instant;
 
-    private int grid[][];
-    private int newgrid[][];
+public class GameOfLife implements Runnable {
+    private static int MAX_SIZE = 2048;
+    private static int GEN_NUM = 2000;
+    private static int THREAD_NUM = 8;
+    private static int LIVING = 1;
+    private static int DEAD = 0;
+
+    private static int grid[][];
+    private static int newgrid[][];
+
+    private int id;
+
+    public GameOfLife(int id) {
+        this.id = id;
+    }
 
     private void fill_grids() {
         this.grid = new int[this.MAX_SIZE][this.MAX_SIZE];
@@ -96,8 +104,10 @@ public class GameOfLife {
         }
     }
 
-    private void fill_newgrid() {
-        for (int i = 0; i < this.MAX_SIZE; i++) {
+    public void run() {
+        int start = (this.MAX_SIZE / this.THREAD_NUM) * this.id;
+        int end = (this.MAX_SIZE / this.THREAD_NUM) * (this.id + 1);
+        for (int i = start; i < end; i++) {
             for (int j = 0; j < this.MAX_SIZE; j++) {
                 int neighbor_num = this.getNeighbors(i, j);
     
@@ -139,19 +149,41 @@ public class GameOfLife {
         System.out.println();
     }
 
-    private void run() {
-        this.fill_grids();
-        System.out.println("Initial state: " + this.count_living());
+    private int getGenNum() {
+        return this.GEN_NUM;
+    }
 
-        for (int i = 0; i < this.GEN_NUM; i++) {
-            this.fill_newgrid();
-            this.copy_newgrid();
-            System.out.println("Gen " + (i + 1) + ": " + this.count_living());
-        }
+    private int getThreadNum() {
+        return this.THREAD_NUM;
     }
 
     public static void main(String[] args) {
-        GameOfLife game = new GameOfLife();
-        game.run();
+        long start = Instant.now().toEpochMilli();
+
+        GameOfLife game = new GameOfLife(8);
+        game.fill_grids();
+        System.out.println("Initial state: " + game.count_living());
+
+        for (int i = 0; i < game.getGenNum(); i++) {
+            for (int j = 0; j < game.getThreadNum(); j++) {
+                GameOfLife gofRunnable = new GameOfLife(j);
+                Thread gofThread = new Thread(gofRunnable);
+                gofThread.start();
+
+                try {
+                    gofThread.join();
+                } catch (InterruptedException e) {
+                    System.out.println("Interrupted Exception");
+                }
+            }
+
+            game.copy_newgrid();
+
+            System.out.println("Gen " + (i + 1) + ": " + game.count_living());
+        }
+
+        long end = Instant.now().toEpochMilli();
+
+        System.out.println(end - start);
     }
 }

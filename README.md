@@ -29,3 +29,10 @@ Highlife:
 2 threads: 187.240000
 3 threads: 141.230000
 4 threads: 114.325000
+
+Game of life (Java):
+
+1 thread: 117503
+2 threads: 149510
+3 threads: 133783
+4 threads: 150865
