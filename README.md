@@ -3,14 +3,14 @@ Game of life implementation through multiple threads.
 
 Game of life rules:
 
-A. Living cells with 2 or 3 neighbours survive;
-B. Dead cells with 3 neighbours become living;
+A. Living cells with 2 or 3 neighbors survive;
+B. Dead cells with 3 neighbors become living;
 C. Otherwise, living cells die and dead cells stay dead.
 
 Highlife variation rules:
 
-A. Living cells with 2 or 3 neighbours survive;
-B. Dead cells with 3 or 6 neighbours become living;
+A. Living cells with 2 or 3 neighbors survive;
+B. Dead cells with 3 or 6 neighbors become living;
 C. Otherwise, living cells die and dead cells stay dead.
 
 # Results
@@ -34,5 +34,12 @@ Game of life (Java):
 
 1 thread: 117503
 2 threads: 149510
-3 threads: 133783
-4 threads: 150865
+4 threads: 133783
+8 threads: 150865
+
+Highlife (Java):
+
+1 thread: 123915
+2 threads: 145002
+4 threads: 109916
+8 threads: 138079
