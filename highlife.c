@@ -4,7 +4,7 @@
 
 #define MAX_SIZE 2048
 #define GEN_NUM 2000
-#define THREAD_NUM 1
+#define THREAD_NUM 8
 #define LIVING 1
 #define DEAD 0
 

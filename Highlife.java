@@ -3,7 +3,7 @@ import java.time.Instant;
 public class Highlife implements Runnable {
     private static int MAX_SIZE = 2048;
     private static int GEN_NUM = 2000;
-    private static int THREAD_NUM = 1;
+    private static int THREAD_NUM = 8;
     private static int LIVING = 1;
     private static int DEAD = 0;
 

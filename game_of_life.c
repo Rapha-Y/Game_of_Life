@@ -4,18 +4,26 @@
 
 #define MAX_SIZE 2048
 #define GEN_NUM 2000
-#define THREAD_NUM 1
+#define THREAD_NUM 8
 #define LIVING 1
 #define DEAD 0
 
-void init_grid(int **grid) {
+void init_grid(int **grid, double *para_time) {
+    double start_aux, end_aux;
+    
     int i, j;
-    #pragma omp parallel for private(i, j) num_threads(THREAD_NUM)
+
+    start_aux = omp_get_wtime();
+
+//    #pragma omp parallel for private(i, j) num_threads(THREAD_NUM)
     for (i = 0; i < MAX_SIZE; i++) {
         for (j = 0; j < MAX_SIZE; j++) {
             grid[i][j] = DEAD;
         }
     }
+
+    end_aux = omp_get_wtime();
+    *para_time += end_aux - start_aux;
 
     //Glider
     int row = 1;
@@ -86,9 +94,13 @@ int getNeighbors(int **grid, int i, int j) {
     return neighbor_num;
 }
 
-void fill_newgrid(int **grid, int **newgrid) {
+void fill_newgrid(int **grid, int **newgrid, double *para_time) {
+    double start_aux, end_aux;
     int i, j;
-    #pragma omp parallel for private(i, j) num_threads(THREAD_NUM)
+
+    start_aux = omp_get_wtime();
+
+//    #pragma omp parallel for private(i, j) num_threads(THREAD_NUM)
     for (i = 0; i < MAX_SIZE; i++) {
         for (j = 0; j < MAX_SIZE; j++) {
             int neighbor_num = getNeighbors(grid, i, j);
@@ -102,22 +114,32 @@ void fill_newgrid(int **grid, int **newgrid) {
             }
         }
     }
+
+    end_aux = omp_get_wtime();
+    *para_time += end_aux - start_aux;
 }
 
-void copy_newgrid(int **grid, int **newgrid) {
+void copy_newgrid(int **grid, int **newgrid, double *para_time) {
+    double start_aux, end_aux;
     int i, j;
-    #pragma omp parallel for private(i, j) num_threads(THREAD_NUM)
+
+    start_aux = omp_get_wtime();
+
+//    #pragma omp parallel for private(i, j) num_threads(THREAD_NUM)
     for (i = 0; i < MAX_SIZE; i++) {
         for (j = 0; j < MAX_SIZE; j++) {
             grid[i][j] = newgrid[i][j];
         }
     }
+
+    end_aux = omp_get_wtime();
+    *para_time += end_aux - start_aux;
 }
 
 int count_living(int **grid) {
     int i, j;
     int living_num = 0;
-    #pragma omp parallel for private(i, j) reduction(+:living_num) num_threads(THREAD_NUM)
+//    #pragma omp parallel for private(i, j) reduction(+:living_num) num_threads(THREAD_NUM)
     for (i = 0; i < MAX_SIZE; i++) {
         for (j = 0; j < MAX_SIZE; j++) {
             if (grid[i][j] == LIVING) {
@@ -143,32 +165,46 @@ void show_grid(int **mat) {
 }
 
 int main() {
+    double para_time = 0, start_aux, end_aux;
     double start_time = omp_get_wtime();
 
     int i;
     int **grid = (int**) malloc(MAX_SIZE * sizeof(int*));
-    #pragma omp parallel for private(i) num_threads(THREAD_NUM)
+
+    start_aux = omp_get_wtime();
+
+//    #pragma omp parallel for private(i) num_threads(THREAD_NUM)
     for (i = 0; i < MAX_SIZE; i++) {
         grid[i] = (int*) malloc(MAX_SIZE * sizeof(int));
     }
 
+    end_aux = omp_get_wtime();
+    para_time += end_aux - start_aux;
+
     int **newgrid = (int**) malloc(MAX_SIZE * sizeof(int*));
-    #pragma omp parallel for private(i) num_threads(THREAD_NUM)
+    
+    start_aux = omp_get_wtime();
+
+//    #pragma omp parallel for private(i) num_threads(THREAD_NUM)
     for (i = 0; i < MAX_SIZE; i++) {
         newgrid[i] = (int*) malloc(MAX_SIZE * sizeof(int));
     }
+
+    end_aux = omp_get_wtime();
+    para_time += end_aux - start_aux;
     
-    init_grid(grid);
+    init_grid(grid, &para_time);
     printf("Initial state: %d\n", count_living(grid));   
 
     for (int i = 0; i < GEN_NUM; i++) {
-        fill_newgrid(grid, newgrid);
-        copy_newgrid(grid, newgrid);
+        fill_newgrid(grid, newgrid, &para_time);
+        copy_newgrid(grid, newgrid, &para_time);
         printf("Gen %d: %d\n", i + 1, count_living(grid));
     }
 
     double end_time = omp_get_wtime();
     printf("%f\n", end_time - start_time);
+    printf("%f\n", end_time - start_time - para_time);
 
     return 0;
 }
